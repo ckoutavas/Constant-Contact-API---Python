@@ -40,7 +40,7 @@ CC = cc(api_key = 'your_api_key', token = 'your_access_token', Originating_Ip = 
 CC.get_mailing_lists()
 ```
 
-# how to POST a csv file to a mailing list:
+# how to POST a csv file of contacts to a mailing list:
 
 note your file headers need to be formated correctly. 
 Visit http://developer.constantcontact.com/docs/bulk_activities_api/bulk-activities-import-contacts.html
