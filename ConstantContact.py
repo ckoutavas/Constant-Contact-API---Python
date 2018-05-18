@@ -54,7 +54,7 @@ class ConstantContact(object):
         it uses the constant contact lists api and passes your headers, which contains
         your access token, X-Originating-Ip and the content-type
 
-        returns a json response by default but using the argument types=text8 you can
+        returns a json response by default but using the argument types=text you can
         return response.text
 
         """
