@@ -20,7 +20,7 @@ Visit http://developer.constantcontact.com/docs/bulk_activities_api/bulk-activit
 and look at Structure to see appropiate file headers
 
 ```
-CC.add_contacts(file_name = 'your_file.csv', list_id = 'your_list_id', types='json')
+CC.add_contacts(file_name='your_file.csv', list_id=('your_list_id','your other list id'), types='json')
 ```
 
 How to return the bulk activities response for all bulk actvites for the day:
