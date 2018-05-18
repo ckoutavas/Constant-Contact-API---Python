@@ -1,7 +1,5 @@
 import requests
 
-
-
 class ConstantContact(object):
     """
     ConstantContact uses the requests package with the constant contact api
