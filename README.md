@@ -5,7 +5,7 @@ This is a Constant Contact api wrapper that uses the Constant Contact API to GET
 Calling the ConstantContact module:
 ```
 from ConstantContact import ConstantContact
-CC = ConstantContact(api_key = 'your_api_key', token = 'your_access_token', Originating_Ip = 'your_X-Originating-Ip')
+CC = ConstantContact(api_key='your_api_key', token='your_access_token', Originating_Ip='your_X-Originating-Ip')
 ```
 
 How to get all your mailing list information and list ids:
@@ -20,7 +20,6 @@ Visit http://developer.constantcontact.com/docs/bulk_activities_api/bulk-activit
 and look at Structure to see appropiate file headers
 
 ```
-CC = ConstantContact(api_key = 'your_api_key', token = 'your_access_token', Originating_Ip = 'your_X-Originating-Ip')
 CC.add_contacts(file_name = 'your_file.csv', list_id = 'your_list_id', types='json')
 ```
 
