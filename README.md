@@ -1,5 +1,5 @@
 
-This is a Constant Contact api wrapper that uses the Constant Contact API to GET various information out of Constant Contact and POST contact files to lists. For any of types atribute you can call a text response or a json response: types='text' or types='json' the default if type is None the default is a json response.
+This is a Constant Contact api wrapper that uses the Constant Contact API to GET various information out of Constant Contact and POST contact files to lists. For any of types atribute you can call a text response or a json response: types='text' or types='json' the default if type is None is a json response.
 
 
 Calling the ConstantContact module:
@@ -15,9 +15,7 @@ CC.get_mailing_lists(types='json')
 
 How to POST a csv file of contacts to a mailing list:
 
-note your file headers need to be formated correctly. 
-Visit http://developer.constantcontact.com/docs/bulk_activities_api/bulk-activities-import-contacts.html
-and look at Structure to see appropiate file headers
+Note that your file headers need to be formated correctly. Visit http://developer.constantcontact.com/docs/bulk_activities_api/bulk-activities-import-contacts.html and look at Structure to see appropiate file headers
 
 ```
 CC.add_contacts(file_name='your_file.csv', list_id=('your_list_id','your other list id'), types='json')
