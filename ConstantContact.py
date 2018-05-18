@@ -39,10 +39,12 @@ class ConstantContact(object):
                               {'Expires': '0'}),
                      'lists': i}
         response = requests.post(uri, headers=headers, files=files)
-        if self.types is None:
+        if self.types == 'json':
             return(response, response.json())
         if self.types == 'text':
             return(response, response.text)
+        if self.types is None:
+            return(response, response.json())
 
     def get_mailing_lists(self, types=None):
         """
