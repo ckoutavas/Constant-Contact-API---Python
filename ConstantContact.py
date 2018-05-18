@@ -32,19 +32,20 @@ class ConstantContact(object):
         headers = {'Authorization': 'Bearer '+self.token, 'X-Originating-Ip': self.originating_ip,
                    'content-type': 'multipart/form-data'}
 
-        for i in self.list_id:
+        for i in tuple(self.list_id):
             files = {'file_name': self.file_name,
                      'data': (self.file_name, open(self.file_name, 'rb'),
                               'application/vnd.ms-excel',
                               {'Expires': '0'}),
                      'lists': i}
             response = requests.post(uri, headers=headers, files=files)
-            if self.types == 'json':
-                return(response, response.json())
-            if self.types == 'text':
-                return(response, response.text)
-            if self.types is None:
-                return(response, response.json())
+            print(response, 'for:', i)
+        if self.types == 'json':
+            return response.json()
+        if self.types == 'text':
+            return response.text
+        if self.types is None:
+            return response.json()
 
     def get_mailing_lists(self, types=None):
         """
