@@ -1,5 +1,5 @@
 
-This is a Constant Contact api wrapper that uses the Constant Contact API to GET various information out of Constant Contact and POST contact files to lists. For any of res_type atribute you can call a text response or a json response: res_type='text' or res_type='json' the default if type is None is a json response.
+This is a Constant Contact api wrapper that uses the Constant Contact API to GET various information out of Constant Contact and POST contact files to lists. For any of res_type atribute you can call a text response or a json response: res_type='text' or res_type='json' the default if res_type is None is a json response.
 
 
 Calling the ConstantContact module:
