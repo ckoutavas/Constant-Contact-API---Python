@@ -16,6 +16,12 @@ class ConstantContact(object):
         self.res_type = None
         self.campaign_id = None
         self.campaign_uri = 'https://api.constantcontact.com/v2/emailmarketing/campaigns?api_key=' + self.api_key
+        self.modified_since = None
+        self.status = None
+        self.campaign = None
+        self.contact_uri = 'https://api.constantcontact.com/v2/contacts?api_key='+self.api_key
+        self.to = None
+        self.email = None
 
     def add_contacts(self, file_name, list_id, res_type=None):
         """
@@ -125,20 +131,34 @@ class ConstantContact(object):
         if self.res_type is None:
             return response.json()
 
-    def get_campaigns(self):
+    def get_campaigns(self, modified_since=None, status=None):
         """
         get_campaigns uses a GET request to gather all campaign information
         Must be json response
 
         :return: returns campaign information but the limit is 50 use next_link() to get the next 50
+        :param modified_since: this must beISO 8601 format
+        :param status: can be ALL DRAFT RUNNING SENT SCHEDULED
+        :return: returns the json response
         """
+        self.modified_since = modified_since
+        self.status = status
+
+        if self.modified_since is None and self.status is None:
+            self.campaign_uri = self.campaign_uri
+        if self.modified_since is not None and self.status is None:
+            self.campaign_uri = self.campaign_uri+'&modified_since='+self.modified_since
+        if self.modified_since is not None and self.status is not None:
+            self.campaign_uri = self.campaign_uri+'&modified_since='+self.modified_since+'&status='+self.status
+        if self.modified_since is None and self.status is not None:
+            self.campaign_uri = self.campaign_uri+'&status='+self.status
 
         headers = {'Authorization': 'Bearer ' + self.token, 'X-Originating-Ip': self.originating_ip}
         response = requests.get(self.campaign_uri, headers=headers)
 
         return response.json()
 
-    def next_link(self):
+    def next_link(self, to):
         """
         next link will allow you to view all your campaigns 50 results at a time
 
@@ -147,20 +167,33 @@ class ConstantContact(object):
         :return: returns the new uri for get_campaigns
 
         sample code:
+
         cc = ConstantContact(x,y,z)
-        cc.campaign_uri = cc.next_link()
+        cc.campaign_uri = cc.next_link(to='campaigns')
         cc.get_campaigns()
 
+        cc = ConstantContact(x,y,z)
+        cc.contact_uri = cc.next_link(to='contacts')
+        cc.get_contacts()
+
         """
+        self.to = to
         data = self.get_campaigns()
         next_link = data['meta']['pagination']['next_link'].split('next=')[1]
-        uri = 'https://api.constantcontact.com/v2/emailmarketing/campaigns?api_key=' + self.api_key + '&next=' + next_link
+        uri = 'https://api.constantcontact.com/v2/emailmarketing/campaigns?api_key='+self.api_key+'&next='+next_link
 
-        return uri
+        data2 = self.get_contacts()
+        next_link2 = data2['meta']['pagination']['next_link'].split('next=')[1]
+        uri2 = 'https://api.constantcontact.com/v2/contacts?api_key='+self.api_key+'&next='+next_link2
+
+        if self.to == 'campaigns':
+            return uri
+        if self.to == 'contacts':
+            return uri2
 
     def unique_campaign(self, campaign_id, res_type=None):
         """
-        unique_campaign uses GET a GET request to gather single campaign information
+        unique_campaign uses a GET request to gather single campaign information
 
         :param campaign_id: the campaign id for the campaign you want to return
         :param res_type: this is the response type. it is defaulted to json but will take 'text' or 'json'
@@ -181,3 +214,50 @@ class ConstantContact(object):
         if self.res_type is None:
             return response.json()
 
+    def get_contacts(self, modified_since=None, status=None, email=None):
+        """
+        get_contacts uses a GET request to gather contact information
+
+        use can also use the next_link(to='contacts') method to go to the next page
+
+        possibly will add the limit query in the future
+
+        example:
+
+        cc = ConstantContact(x,y,z)
+        cc.contact_uri = cc.next_link(to='contacts')
+        cc.get_contacts()
+
+        :param modified_since: this must beISO 8601 format
+        :param status: must be ALL, ACTIVE, UNCONFIRMED, OPTOUT, REMOVED
+        :param email: the email address of a contact to look up
+        :return: returns a json response and only a json response
+        """
+
+        self.modified_since = modified_since
+        self.status = status
+        self.email = email
+
+        if self.modified_since is None and self.status is None and self.email is None:
+            self.contact_uri = self.contact_uri
+        if self.modified_since is not None and self.status is None and self.email is None:
+            self.contact_uri = self.contact_uri+'&modified_since='+self.modified_since
+        if self.modified_since is not None and self.status is not None and self.email is None:
+            self.contact_uri = self.contact_uri+'&modified_since='+self.modified_since+'&status='+self.status
+        if self.modified_since is None and self.status is not None and self.email is None:
+            self.contact_uri = self.contact_uri+'&status='+self.status
+
+        if self.modified_since is None and self.status is None and self.email is not None:
+            self.contact_uri = self.contact_uri+'&email='+self.email
+        if self.modified_since is not None and self.status is None and self.email is not None:
+            self.contact_uri = self.contact_uri+'&modified_since='+self.modified_since+'&email='+self.email
+        if self.modified_since is not None and self.status is not None and self.email is not None:
+            self.contact_uri = self.contact_uri+'&modified_since='+self.modified_since+'&status='+self.status\
+                               + '&email='+self.email
+        if self.modified_since is None and self.status is not None and self.email is not None:
+            self.contact_uri = self.contact_uri+'&status='+self.status+'&email='+self.email
+
+        headers = {'Authorization': 'Bearer ' + self.token, 'X-Originating-Ip': self.originating_ip}
+        response = requests.get(self.contact_uri, headers=headers)
+
+        return response.json()
